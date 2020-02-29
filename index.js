@@ -43,6 +43,21 @@ const THOUSAND = 1000;
 const LAKH = 100000;
 const CRORE = 10000000;
 
+
+/**
+ * 
+ * @param {number} number 
+ * @returns {string}
+ */
+function findFraction(number) {
+    let suffix = '';
+    if (number < ONE) {
+        suffix = ' and ' + findText(parseInt((number * 100).toFixed(2), 10)) + ' paisa';
+        number = 0;
+    }
+    return suffix;
+}
+
 /**
  * 
  * @param {number} number 
@@ -50,15 +65,12 @@ const CRORE = 10000000;
  */
 function findSuffix(number) {
     let suffix = '';
-    if (number < ONE) {
-        suffix = ' and ' + findText(parseInt((number * 100).toFixed(2), 10)) + ' paisa';
-        number = 0;
-    } else if (number < TEN) {
-        suffix = findText(number) + ' rupee ';
+    if (number < TEN) {
+        suffix = findText(number);
         number = Math.floor((number % 1) * 100) / 100
     } else if (number < HUNDRED) {
         const temp = number;
-        suffix = findText(temp) + ' rupee ';
+        suffix = findText(temp);
         number = number % ONE;
     } else if (number < THOUSAND) {
         const temp = number / HUNDRED;
@@ -108,12 +120,14 @@ function convert(number) {
     if (typeof number === 'string') {
         number = parseFloat(number);
     }
-    const words = findSuffix(number).split(' ').filter(e => e);
-    const indexes = words.map((e, i) => e == 'rupee' ? i : null).filter(e => e).reverse();
-    if (indexes.length > 1) {
-        for (let i = 1; i < indexes.length; i++) {
-            words.splice(indexes[i], 1);
-        }
-    }
-    return words.join(' ');
+    const integer = Math.trunc(number);
+    const fraction = parseFloat((number % integer).toFixed(2));
+    const words = (findSuffix(integer) + 'rupees').split(' ').filter(e => e).join(' ') + findFraction(fraction);
+    // const indexes = words.map((e, i) => e == 'rupee' ? i : null).filter(e => e).reverse();
+    // if (indexes.length > 1) {
+    //     for (let i = 1; i < indexes.length; i++) {
+    //         words.splice(indexes[i], 1);
+    //     }
+    // }
+    return words;
 }
