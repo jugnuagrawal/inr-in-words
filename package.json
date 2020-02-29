@@ -1,6 +1,6 @@
 {
   "name": "inr-in-words",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Convert Indian Rupee (INR) to words",
   "main": "index.js",
   "scripts": {
